@@ -1,7 +1,8 @@
-from flask import Blueprint, jsonify, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.models import db, User
+from flask import Blueprint, jsonify
+from flask_jwt_extended import jwt_required
+
 from app.auth import auth
+from app.models import User
 
 main = Blueprint("main", __name__)
 
@@ -15,7 +16,9 @@ def home():
 @jwt_required()
 def get_users():
     users = User.query.all()
-    return jsonify([{"id": u.id, "username": u.username} for u in users])
+    return jsonify(
+        [{"id": u.id, "username": u.username} for u in users]
+    )
 
 
 def init_routes(app):

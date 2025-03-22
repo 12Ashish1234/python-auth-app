@@ -1,4 +1,5 @@
 import pytest
+
 from app import create_app, db
 
 
@@ -29,7 +30,9 @@ def test_register(client):
 
 
 def test_login(client):
-    client.post("/register", json={"username": "testuser", "password": "testpass"})
+    client.post("/register",
+                json={"username": "testuser", "password": "testpass"}
+                )
     response = client.post(
         "/login", json={"username": "testuser", "password": "testpass"}
     )

@@ -1,7 +1,8 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify, request
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token
-from app.models import db, User
+
+from app.models import User, db
 
 bcrypt = Bcrypt()
 auth = Blueprint("auth", __name__)
@@ -10,7 +11,9 @@ auth = Blueprint("auth", __name__)
 @auth.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
-    hashed_password = bcrypt.generate_password_hash(data["password"]).decode("utf-8")
+    hashed_password = (
+        bcrypt.generate_password_hash(data["password"]).decode("utf-8")
+    )
     user = User(username=data["username"], password=hashed_password)
     db.session.add(user)
     db.session.commit()
