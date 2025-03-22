@@ -4,22 +4,24 @@ from flask_jwt_extended import create_access_token
 from app.models import db, User
 
 bcrypt = Bcrypt()
-auth = Blueprint('auth', __name__)
+auth = Blueprint("auth", __name__)
 
-@auth.route('/register', methods=['POST'])
+
+@auth.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
-    hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-    user = User(username=data['username'], password=hashed_password)
+    hashed_password = bcrypt.generate_password_hash(data["password"]).decode("utf-8")
+    user = User(username=data["username"], password=hashed_password)
     db.session.add(user)
     db.session.commit()
     return jsonify({"message": "User created successfully"}), 201
 
-@auth.route('/login', methods=['POST'])
+
+@auth.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
-    user = User.query.filter_by(username=data['username']).first()
-    if user and bcrypt.check_password_hash(user.password, data['password']):
+    user = User.query.filter_by(username=data["username"]).first()
+    if user and bcrypt.check_password_hash(user.password, data["password"]):
         token = create_access_token(identity=user.username)
         return jsonify({"token": token})
     return jsonify({"message": "Invalid credentials"}), 401

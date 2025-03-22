@@ -6,9 +6,15 @@ from app.models import db  # Ensure you import db from models
 
 jwt = JWTManager()
 
-def create_app():
+
+def create_app(testing=False):
     app = Flask(__name__)
+    app.config["TESTING"] = True
     app.config.from_object("config.Config")
+    app.config["SQLALCHEMY_DATABASE_URI"] = (
+        "sqlite:///:memory:"  # Use an in-memory DB for tests
+    )
+    app.config["WTF_CSRF_ENABLED"] = False  # Disable CSRF for testing if necessary
 
     # Initialize plugins
     db.init_app(app)
