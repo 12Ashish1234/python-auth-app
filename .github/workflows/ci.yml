@@ -27,16 +27,12 @@ jobs:
       - name: Run Tests
         run: PYTHONPATH=. pytest tests/
   scan:
-    name: pysa
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Run Pysa Action
-        uses: facebook/pysa-action@0.0.1
+      - uses: AppThreat/sast-scan-action@master
         with:
-          repo-directory: './'
-          requirements-path: 'requirements.txt'
-          infer-types: true
-          include-default-sapp-filters: true
-          sapp-filters-directory: path/to/custom-filters
+          type: "python"
+      - uses: actions/upload-artifact@v1
+        with:
+          name: reports
+          path: reports
